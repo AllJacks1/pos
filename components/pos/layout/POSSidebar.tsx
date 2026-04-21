@@ -92,13 +92,12 @@ const formatCurrency = (amount: number) =>
 
 const calculateOrderSummary = (
   cart: CartItem[],
-  discountPercent: number
+  discountPercent: number,
 ): OrderSummary => {
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce(
-    (sum, item) =>
-      sum + item.quantity * (item.price - (item.discount || 0)),
-    0
+    (sum, item) => sum + item.quantity * (item.price - (item.discount || 0)),
+    0,
   );
   const taxRate = 0.08; // 8% tax — configurable in real app
   const taxAmount = subtotal * taxRate;
@@ -143,12 +142,12 @@ function OrderCart({ cart, onUpdateQuantity, onRemove }: OrderCartProps) {
   }
 
   return (
-    <ScrollArea className="flex-1 px-4">
+    <ScrollArea className="h-full px-4">
       <div className="space-y-3 py-4">
         {cart.map((item) => (
           <div
             key={item.id}
-            className="group relative bg-[#FFFFFF] border border-[#E2E8F0] rounded-[10px] p-3 hover:border-[#2563EB]/30 transition-colors"
+            className="group relative bg-[#FFFFFF] border border-[#E2E8F0] rounded-[10px] p-2.5 sm:p-3 hover:border-[#2563EB]/30 transition-colors"
           >
             <div className="flex items-start gap-3">
               {/* Product Image Placeholder */}
@@ -175,17 +174,20 @@ function OrderCart({ cart, onUpdateQuantity, onRemove }: OrderCartProps) {
                   </div>
                   <span className="text-[#0F172A] font-semibold text-sm whitespace-nowrap">
                     {formatCurrency(
-                      item.quantity * (item.price - (item.discount || 0))
+                      item.quantity * (item.price - (item.discount || 0)),
                     )}
                   </span>
                 </div>
 
                 {/* Quantity Controls */}
-                <div className="flex items-center justify-between mt-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 mt-3">
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() =>
-                        onUpdateQuantity(item.id, Math.max(0, item.quantity - 1))
+                        onUpdateQuantity(
+                          item.id,
+                          Math.max(0, item.quantity - 1),
+                        )
                       }
                       className="w-7 h-7 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center text-[#64748B] hover:bg-[#E2E8F0] hover:text-[#0F172A] transition-colors disabled:opacity-40"
                       disabled={item.quantity <= 1}
@@ -272,7 +274,10 @@ function OrderSummary({
       {!discountCode ? (
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Tag className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]" strokeWidth={2} />
+            <Tag
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94A3B8]"
+              strokeWidth={2}
+            />
             <Input
               placeholder="Discount code..."
               value={codeInput}
@@ -290,7 +295,7 @@ function OrderSummary({
           </Button>
         </div>
       ) : (
-        <div className="flex items-center justify-between bg-[#2563EB]/5 border border-[#2563EB]/20 rounded-lg px-3 py-2">
+        <div className="flex flex-wrap items-center justify-between gap-2flex items-center justify-between bg-[#2563EB]/5 border border-[#2563EB]/20 rounded-lg px-3 py-2">
           <div className="flex items-center gap-2">
             <Percent className="w-4 h-4 text-[#2563EB]" strokeWidth={2} />
             <span className="text-sm font-medium text-[#2563EB]">
@@ -325,7 +330,9 @@ function OrderSummary({
         </div>
 
         <div className="flex justify-between text-sm">
-          <span className="text-[#64748B]">Tax ({(summary.taxRate * 100).toFixed(0)}%)</span>
+          <span className="text-[#64748B]">
+            Tax ({(summary.taxRate * 100).toFixed(0)}%)
+          </span>
           <span className="text-[#0F172A] font-medium">
             {formatCurrency(summary.taxAmount)}
           </span>
@@ -388,19 +395,19 @@ function PaymentPanel({
   const quickAmounts = useMemo(() => {
     const rounded = Math.ceil(total / 5) * 5;
     return [rounded, rounded + 5, rounded + 10, rounded + 20].filter(
-      (a) => a >= total
+      (a) => a >= total,
     );
   }, [total]);
 
   return (
     <div className="bg-[#FFFFFF] border-t border-[#E2E8F0] px-4 py-4 space-y-4">
       {/* Payment Method Tabs */}
-      <div className="grid grid-cols-3 gap-2">
-        {([
+      <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-2">
+        {[
           { id: "cash" as PaymentMethod, label: "Cash", icon: Banknote },
           { id: "card" as PaymentMethod, label: "Card", icon: CreditCard },
           { id: "other" as PaymentMethod, label: "Other", icon: Receipt },
-        ]).map(({ id, label, icon: Icon }) => (
+        ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => onPaymentMethodChange(id)}
@@ -408,7 +415,7 @@ function PaymentPanel({
               "flex flex-col items-center gap-1.5 py-2.5 px-2 rounded-lg border text-sm font-medium transition-all",
               paymentMethod === id
                 ? "bg-[#2563EB]/5 border-[#2563EB] text-[#2563EB]"
-                : "bg-[#FFFFFF] border-[#E2E8F0] text-[#64748B] hover:border-[#94A3B8] hover:text-[#0F172A]"
+                : "bg-[#FFFFFF] border-[#E2E8F0] text-[#64748B] hover:border-[#94A3B8] hover:text-[#0F172A]",
             )}
           >
             <Icon className="w-5 h-5" strokeWidth={2} />
@@ -441,7 +448,7 @@ function PaymentPanel({
           </div>
 
           {/* Quick Amount Buttons */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-2 flex-wrap sm:flex-nowrap">
             {quickAmounts.map((amount) => (
               <button
                 key={amount}
@@ -457,7 +464,7 @@ function PaymentPanel({
                 "px-3 py-1.5 rounded-md text-sm font-medium transition-colors",
                 isExact
                   ? "bg-[#10B981]/10 text-[#10B981] border border-[#10B981]/30"
-                  : "bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:border-[#10B981] hover:text-[#10B981]"
+                  : "bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:border-[#10B981] hover:text-[#10B981]",
               )}
             >
               Exact
@@ -471,7 +478,7 @@ function PaymentPanel({
                 "flex justify-between items-center px-3 py-2 rounded-lg text-sm",
                 isInsufficient
                   ? "bg-[#EF4444]/5 text-[#EF4444]"
-                  : "bg-[#10B981]/5 text-[#10B981]"
+                  : "bg-[#10B981]/5 text-[#10B981]",
               )}
             >
               <span className="font-medium flex items-center gap-1.5">
@@ -495,7 +502,7 @@ function PaymentPanel({
       )}
 
       {/* Action Buttons */}
-      <div className="grid grid-cols-[1fr_auto] gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
         <Button
           onClick={onCheckout}
           disabled={disabled || (paymentMethod === "cash" && isInsufficient)}
@@ -503,7 +510,7 @@ function PaymentPanel({
             "h-12 rounded-lg text-base font-semibold transition-all",
             disabled
               ? "bg-[#E2E8F0] text-[#94A3B8] cursor-not-allowed"
-              : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-sm hover:shadow-md"
+              : "bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-sm hover:shadow-md",
           )}
         >
           {disabled ? (
@@ -590,7 +597,7 @@ export default function POSSidebar({
       return;
     }
     setLocalCart((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
+      prev.map((item) => (item.id === id ? { ...item, quantity } : item)),
     );
   };
 
@@ -648,19 +655,21 @@ export default function POSSidebar({
       return;
     }
     // Mock checkout
-    alert(`Payment processed: ${formatCurrency(summary.total)} via ${paymentMethod}`);
+    alert(
+      `Payment processed: ${formatCurrency(summary.total)} via ${paymentMethod}`,
+    );
     handleClear();
   };
 
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-[#FFFFFF] border-l border-[#E2E8F0] w-[420px] min-w-[420px]",
-        className
+        "flex flex-col h-full min-h-0 bg-[#FFFFFF] border-t lg:border-t-0 lg:border-l border-[#E2E8F0] w-full lg:w-[420px] lg:min-w-[420px]",
+        className,
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#E2E8F0] bg-[#FFFFFF]">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-3 border-b border-[#E2E8F0] bg-[#FFFFFF]">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-[#2563EB]/10 flex items-center justify-center">
             <ShoppingCart className="w-4 h-4 text-[#2563EB]" strokeWidth={2} />
@@ -684,14 +693,19 @@ export default function POSSidebar({
         )}
       </div>
 
-      {/* Cart Items */}
-      <OrderCart
-        cart={cart}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemove={handleRemove}
-      />
+      {/* Scrollable Middle Area */}
+      <div className="flex flex-col flex-1 min-h-0">
+        {/* Cart Items (scroll area takes full height) */}
+        <div className="flex-1 min-h-0">
+          <OrderCart
+            cart={cart}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemove={handleRemove}
+          />
+        </div>
+      </div>
 
-      {/* Order Summary */}
+      {/* Fixed Bottom Sections */}
       <OrderSummary
         summary={summary}
         discountCode={discountCode}
@@ -700,7 +714,6 @@ export default function POSSidebar({
         onRemoveDiscount={handleRemoveDiscount}
       />
 
-      {/* Payment Panel */}
       <PaymentPanel
         total={summary.total}
         paymentMethod={paymentMethod}

@@ -85,7 +85,7 @@ function CategoryTabs({
   onSelect: (id: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+    <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
       {categories.map((cat) => {
         const isActive = cat.id === activeId;
         return (
@@ -136,7 +136,7 @@ function ProductCard({
       onClick={onClick}
       disabled={outOfStock}
       className={cn(
-        "group relative flex flex-col items-start p-4 rounded-[10px] border bg-white",
+        "group relative flex flex-col items-start p-3 sm:p-4 rounded-[10px] border bg-white",
         "transition-all duration-200",
         outOfStock
           ? "opacity-50 cursor-not-allowed border-[#E2E8F0]"
@@ -168,7 +168,7 @@ function ProductCard({
           {product.name}
         </h3>
 
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <span className="text-lg font-bold text-[#2563EB]">
             ${product.price.toFixed(2)}
           </span>
@@ -236,7 +236,7 @@ function ProductGrid({
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
       {products.map((product) => (
         <ProductCard
           key={product.id}
@@ -301,7 +301,7 @@ export function POSMainPanel({
       {
         id: "all",
         name: "All Products",
-        icon: <Grid3X3 className="h-4 w-4" />,
+        icon: <Grid3X3 className="h-5 w-5" />,
         productCount: products.length,
       },
       ...categories,
@@ -311,14 +311,14 @@ export function POSMainPanel({
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-[#F8FAFC] rounded-[10px] border border-[#E2E8F0]",
+        "flex flex-col h-full min-w-0 min-h-0 bg-[#F8FAFC] rounded-[10px] border border-[#E2E8F0]",
         "shadow-sm overflow-hidden",
         className,
       )}
     >
       {/* Header Section */}
-      <div className="p-5 pb-4 space-y-4 bg-white border-b border-[#E2E8F0]">
-        <div className="flex items-center justify-between">
+      <div className="p-3 sm:p-4 lg:p-5 pb-4 space-y-4 bg-white border-b border-[#E2E8F0]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="text-xl font-semibold text-[#0F172A] tracking-tight">
               Products
@@ -349,7 +349,7 @@ export function POSMainPanel({
       </div>
 
       {/* Product Grid Scroll Area */}
-      <ScrollArea className="flex-1 p-5">
+      <ScrollArea className="flex-1 min-h-0 p-3 sm:p-4 lg:p-5">
         <ProductGrid
           products={filteredProducts}
           onProductSelect={onProductSelect}
